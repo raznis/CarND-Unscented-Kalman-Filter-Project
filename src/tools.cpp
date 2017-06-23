@@ -15,6 +15,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   TODO:
     * Calculate the RMSE here.
   */
+	cout << "starting RMSE.." << endl;
 	VectorXd rmse = VectorXd(4);
 	rmse << 0, 0, 0, 0;
 	// check the validity of the following inputs:
