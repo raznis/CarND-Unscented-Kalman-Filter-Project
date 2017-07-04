@@ -107,6 +107,8 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  MatrixXd PredictedSigmaPoints(double timdediff);
 };
 
 #endif /* UKF_H */
