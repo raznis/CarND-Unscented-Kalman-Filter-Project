@@ -441,13 +441,13 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     S.fill(0.0);
     for (int i = 0; i < 2 * n_aug_ + 1; i++) {
         //residual
-        VectorXd z_diff = Zsig.col(i) - z_pred;
+        VectorXd z_delta = Zsig.col(i) - z_pred;
 
         //angle normalization
-        while (z_diff(1) > M_PI) z_diff(1) -= 2. * M_PI;
-        while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+        while (z_delta(1) > M_PI) z_delta(1) -= 2. * M_PI;
+        while (z_delta(1) < -M_PI) z_delta(1) += 2. * M_PI;
 
-        S = S + weights_(i) * z_diff * z_diff.transpose();
+        S = S + weights_(i) * z_delta * z_delta.transpose();
     }
 
     //add measurement noise covariance matrix
@@ -475,32 +475,32 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
 
         //residual
-        VectorXd z_diff = Zsig.col(i) - z_pred;
+        VectorXd z_delta = Zsig.col(i) - z_pred;
         //angle normalization
-        while (z_diff(1) > M_PI) z_diff(1) -= 2. * M_PI;
-        while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+        while (z_delta(1) > M_PI) z_delta(1) -= 2. * M_PI;
+        while (z_delta(1) < -M_PI) z_delta(1) += 2. * M_PI;
 
         // state difference
-        VectorXd x_diff = Xsig_pred_.col(i) - x_;
+        VectorXd x_delta = Xsig_pred_.col(i) - x_;
         //angle normalization
-        while (x_diff(3) > M_PI) x_diff(3) -= 2. * M_PI;
-        while (x_diff(3) < -M_PI) x_diff(3) += 2. * M_PI;
+        while (x_delta(3) > M_PI) x_delta(3) -= 2. * M_PI;
+        while (x_delta(3) < -M_PI) x_delta(3) += 2. * M_PI;
 
-        Tc = Tc + weights_(i) * x_diff * z_diff.transpose();
+        Tc = Tc + weights_(i) * x_delta * z_delta.transpose();
     }
 
     //Kalman gain K;
     MatrixXd K = Tc * S.inverse();
 
     //residual
-    VectorXd z_diff = z - z_pred;
+    VectorXd z_delta = z - z_pred;
 
     //angle normalization
-    while (z_diff(1) > M_PI) z_diff(1) -= 2. * M_PI;
-    while (z_diff(1) < -M_PI) z_diff(1) += 2. * M_PI;
+    while (z_delta(1) > M_PI) z_delta(1) -= 2. * M_PI;
+    while (z_delta(1) < -M_PI) z_delta(1) += 2. * M_PI;
 
     //update state mean and covariance matrix
-    x_ = x_ + K * z_diff;
+    x_ = x_ + K * z_delta;
     P_ = P_ - K * S * K.transpose();
 
     // Update radar
